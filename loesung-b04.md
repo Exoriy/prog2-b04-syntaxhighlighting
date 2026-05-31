@@ -66,3 +66,54 @@ Und alle Tests waren erfolgreich.
 
 
 
+---
+
+## Aufgabe 2: RegexHighlighter
+
+In dieser Aufgabe habe ich den `RegexHighlighter` implementiert.
+
+Der `RegexHighlighter` benutzt die Tokens aus `MiniJavaTokens`. In der Methode `collectMatches` werden alle Tokens nacheinander auf den ganzen Text angewendet. Alle gefundenen Treffer werden in einer Liste gesammelt.
+
+Dafür habe ich eine Schleife benutzt:
+
+```java
+for (Token token : MiniJavaTokens.defaultTokens()) {
+  regions.addAll(token.test(text));
+}
+```
+
+Danach müssen Konflikte gelöst werden. Ein Konflikt entsteht, wenn sich zwei `HighlightRegion`-Objekte überschneiden. Das kann zum Beispiel passieren, wenn ein Keyword in einem Kommentar steht.
+
+In `resolveConflicts` gehe ich durch die Liste der Regionen. Wenn eine Region sich mit einer schon übernommenen Region überschneidet, wird sie nicht mehr hinzugefügt. Dadurch bleibt die Region erhalten, die zuerst in der sortierten Liste steht.
+
+Für die Prüfung der Überschneidung habe ich diese Bedingung benutzt:
+
+```java
+return first.start() < second.end() && second.start() < first.end();
+```
+
+Wichtig ist dabei, dass direkt benachbarte Regionen nicht als Konflikt zählen. Zum Beispiel überschneiden sich `[0,5)` und `[5,10)` nicht.
+
+Für den `RegexHighlighter` habe ich JUnit-Tests geschrieben. Die Tests prüfen unter anderem:
+
+- dass Keywords gefunden werden
+- dass `collectMatches` auch überlappende Treffer sammelt
+- dass `resolveConflicts` überlappende Regionen entfernt
+- dass benachbarte Regionen erhalten bleiben
+- dass ein Keyword innerhalb eines Kommentars nicht extra markiert wird
+- dass bei leerem Text keine Treffer entstehen
+- dass bei normalem Text ohne Java-Tokens keine Treffer entstehen
+
+Ich habe das Projekt auch lokal geprüft mit:
+
+```bash
+.\gradlew spotlessApply
+.\gradlew spotlessCheck
+.\gradlew test
+.\gradlew build
+```
+
+Und alle Tests waren erfolgreich.
+
+
+
