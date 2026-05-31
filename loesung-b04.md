@@ -147,3 +147,30 @@ Dadurch wird automatisch geprüft, ob das Projekt formatiert ist, ob die Tests f
 
 
 
+---
+
+## Aufgabe 4.2: Branches und Pull Requests
+
+In dieser Aufgabe habe ich für die Änderungen eigene Branches erstellt und Pull Requests benutzt.
+
+Ich habe nicht direkt auf `master` gearbeitet, sondern für die einzelnen Teile eigene Branches verwendet.
+
+Verwendete Branches:
+
+- `feature/minijava-tokens`
+- `feature/regex-highlighter`
+- `feature/ci-pipeline`
+
+Für diese Branches habe ich Pull Requests erstellt und danach in `master` gemerged.
+
+Dadurch konnte ich die Änderungen getrennt bearbeiten und besser nachvollziehen, welche Änderungen zu welcher Aufgabe gehören.
+
+Die Pull Requests waren:
+
+- MiniJavaTokens
+- RegexHighlighter
+- CI-Pipeline
+
+Beim Pull Request zum `RegexHighlighter` gab es auch ein Review. Danach wurde der Pull Request gemerged.
+
+Durch diese Aufgabe habe ich besser verstanden, wie man mit Branches und Pull Requests arbeitet.
