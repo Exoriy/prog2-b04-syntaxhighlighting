@@ -117,3 +117,33 @@ Und alle Tests waren erfolgreich.
 
 
 
+---
+
+## Aufgabe 4.1: CI-Pipeline
+
+In dieser Aufgabe habe ich eine CI-Pipeline mit GitHub Actions erstellt.
+
+Die CI wird bei Pushes und Pull Requests auf den Branch `master` ausgeführt.
+
+In der Pipeline werden diese Schritte ausgeführt:
+
+- Repository auschecken
+- Java 25 installieren
+- Gradle einrichten
+- Gradle Wrapper ausführbar machen
+- Formatierung mit Spotless prüfen
+- Tests ausführen
+- Projekt bauen
+
+Dafür werden folgende Gradle-Befehle benutzt:
+
+```bash
+./gradlew spotlessCheck
+./gradlew test
+./gradlew build
+```
+
+Dadurch wird automatisch geprüft, ob das Projekt formatiert ist, ob die Tests funktionieren und ob der Build erfolgreich ist.
+
+
+
