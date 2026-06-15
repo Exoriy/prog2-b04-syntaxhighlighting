@@ -42,40 +42,124 @@ public final class PrettyPrinterVisitor extends MiniJavaBaseVisitor<Void> {
 
   @Override
   public Void visitCompilationUnit(MiniJavaParser.CompilationUnitContext ctx) {
-    // TODO:
-    // Produce a nicely structured compilation unit:
-    // - package declaration (if present),
-    // - import declarations (one per line),
-    // - type declarations (one after another),
-    // with sensible blank lines between these parts.
+    if (ctx.packageDecl() != null) {
+      visit(ctx.packageDecl());
+      nl();
+      nl();
+    }
+
+    for (MiniJavaParser.ImportDeclContext importDecl : ctx.importDecl()) {
+      visit(importDecl);
+      nl();
+    }
+
+    if (!ctx.importDecl().isEmpty()) {
+      nl();
+    }
+
+    for (int i = 0; i < ctx.typeDecl().size(); i++) {
+      visit(ctx.typeDecl(i));
+
+      if (i < ctx.typeDecl().size() - 1) {
+        nl();
+        nl();
+      }
+    }
+
     return null;
   }
 
   @Override
   public Void visitClassBody(MiniJavaParser.ClassBodyContext ctx) {
-    // TODO:
-    // Format the contents of a class body:
-    // - opening and closing brace,
-    // - one member declaration per line,
-    // - members indented relative to the class.
+    write("{");
+    nl();
+
+    currentIndent++;
+
+    for (MiniJavaParser.ClassBodyDeclarationContext declaration : ctx.classBodyDeclaration()) {
+      visit(declaration);
+
+      if (!atLineStart) {
+        nl();
+      }
+    }
+
+    currentIndent--;
+
+    write("}");
+
     return null;
   }
 
   @Override
   public Void visitBlock(MiniJavaParser.BlockContext ctx) {
-    // TODO:
-    // Format a block:
-    // - opening and closing brace,
-    // - one blockStatement per line,
-    // - nested blocks indented further.
+    write("{");
+    nl();
+
+    currentIndent++;
+
+    for (MiniJavaParser.BlockStatementContext statement : ctx.blockStatement()) {
+      visit(statement);
+
+      if (!atLineStart) {
+        nl();
+      }
+    }
+
+    currentIndent--;
+
+    write("}");
+
     return null;
   }
 
   @Override
   public Void visitStatement(MiniJavaParser.StatementContext ctx) {
-    // TODO:
-    // Ensure that each statement (if/while/return/block/...) ends up
-    // on exactly one line, with proper indentation for nested statements.
+    if (ctx.block() != null) {
+      visit(ctx.block());
+      return null;
+    }
+
+    if (ctx.IF() != null) {
+      write("if (");
+      visit(ctx.expression());
+      write(") ");
+
+      visit(ctx.statement(0));
+
+      if (!atLineStart) {
+        nl();
+      }
+
+      if (ctx.ELSE() != null) {
+        write("else ");
+        visit(ctx.statement(1));
+
+        if (!atLineStart) {
+          nl();
+        }
+      }
+
+      return null;
+    }
+
+    if (ctx.WHILE() != null) {
+      write("while (");
+      visit(ctx.expression());
+      write(") ");
+
+      visit(ctx.statement(0));
+
+      if (!atLineStart) {
+        nl();
+      }
+
+      return null;
+    }
+
+    visitChildren(ctx);
+    nl();
+
     return null;
   }
 
